@@ -13,9 +13,9 @@ with its own code-drawn picture, then an IN BRIEF band with a simple
 world map and six one-line stories -- twelve stories in all. The day's
 scope follows the rules: events that happened, or were first reported,
 on 27 November 2026 in any time zone. Several leads happened on Thu 26
-Nov (Kuwait, Jazan, the Zelensky warning, the Argentina vote) or Wed 25
-Nov (the birthright ruling) and were first widely reported on Fri 27
-Nov; the masthead says so on the face of the image.
+Nov (Kuwait, Jazan, the Zelensky warning, the Argentina vote) and were
+first widely reported on Fri 27 Nov; the masthead says so on the face
+of the image.
 
 Every fact was checked on 27 Nov 2026 in at least two sources (see
 README.md). Claims are attributed where they are claims ("Italy and
@@ -85,7 +85,7 @@ LEADS = [
          credit="WSJ - NDTV - REUTERS", art="storm"),
     dict(code="05", kicker="ENERGY", city="JAZAN", colour=ORANGE,
          head="Houthi hit kills worker at Saudi refinery",
-         deck="Jazan refinery halts work; Brent crude near $97.",
+         deck="Some Jazan operations halted; Brent near $97.",
          credit="REUTERS - WSJ", art="refinery"),
     dict(code="06", kicker="CONFLICT", city="KYIV", colour=GOLD_DK,
          head="Zelensky warns of new mass strike",
@@ -95,14 +95,14 @@ LEADS = [
 
 # One line each, at most 50 characters, so each fits the brief band.
 BRIEFS = [
-    "UK: Net migration falls to 77,000.",
+    "EU: Budget and EUR45bn Ukraine-loan talks stall.",
     "ARGENTINA: Bank barred from printing money.",
-    "USA: Second judge blocks birthright order.",
+    "CRICKET: Brar strikes on India Test debut.",
     "INDIA: Delhi police free 164 in cyber raid.",
-    "JAPAN: Tokyo prices rise 2.9% in November.",
+    "JAPAN: Tokyo core prices rise 2.9% in November.",
     "WORLD: UN urges Sri Lanka wartime apology.",
 ]
-BRIEF_CREDIT = "ONS - AP - REUTERS - NDTV - AL JAZEERA - UN"
+BRIEF_CREDIT = "EURONEWS - AP - REUTERS - NDTV - AL JAZEERA - UN"
 
 # ---- 5x7 letterforms -------------------------------------------------
 # Each letter is seven rows; each row is one integer whose five bits
@@ -488,7 +488,7 @@ def build_page():
               "SOURCES: REUTERS, AP, CNN, WSJ, DAWN, NIKKEI, STRAITS TIMES, ET,",
               2, GREY)
     pg.glyphs(20, fy + 30,
-              "RNZ, KYIV POST, NDTV, AL JAZEERA, ONS, UN.",
+              "RNZ, KYIV POST, NDTV, AL JAZEERA, EURONEWS, UN.",
               2, GREY)
     pg.glyphs(20, fy + 50,
               "ALL GRAPHICS DRAWN IN CODE; NO PHOTOS, NO PORTRAITS.",
