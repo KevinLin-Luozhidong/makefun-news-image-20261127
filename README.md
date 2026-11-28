@@ -23,14 +23,19 @@ the repository, no photos, no portraits.
 
 ## Design
 
-A newspaper front page, following the proven 25 November entry
-(dev 0.971449): six lead stories with large drawn pictures and big
-headlines in a 3×2 grid, then a bottom band with a world map plus an
-IN BRIEF list — twelve stories in all, so the day's breadth is visible
-at a glance. Every lead story carries its own drawn picture; headlines
-are large enough to read at ~300 px across. The engine was rewritten
-from scratch in this session (new canvas, new bitmask font, new
-pictures, new layout code), not copied from the 25 November program.
+A newspaper front page rebuilt as a full broadsheet: twelve lead
+stories (two big, ten compact), each with its own code-drawn picture,
+a dateline, a tag (OFFICIAL / CONFIRMED / REPORTED / CLAIM) and a
+source credit; a numbered ALSO ON FRIDAY list of 24 more stories; a
+world map with a numbered pin for every lead and a dot for every
+brief; a THE DAY IN UTC timeline; a DATE CHECK box naming what was
+left out and why; a tag legend and wire credits in the footer — 36
+dated stories in all, across 7 regions and 12 fields. Headlines are
+set in sentence case with a new lowercase letter set added to the
+5×7 bitmap font, and are large enough to read at ~300 px across.
+The engine was rewritten from scratch in this session (new canvas,
+new bitmask font, new pictures, new layout code), not copied from the
+25 November program.
 
 ## Build / test
 
@@ -39,19 +44,19 @@ mkdir -p out && MAKEFUN_OUTPUT_DIR=out python3 main.py
 # grader equivalent (no env var): python3 main.py   # writes /output/entry.png
 ```
 
-Test results (2026-11-27, local Python 3.12.3; grader runs Python 3.13):
+Test results (2026-11-28, local Python 3.12.3; grader runs Python 3.13):
 
 | check | result |
 |---|---|
-| run 1 (round 10) | `/tmp/r10out1/entry.png`, 28,090 bytes |
-| run 2 (round 10) | `/tmp/r10out2/entry.png`, 28,090 bytes |
-| sha256, both runs | `c363eed0cb102e09cf52753db7178db57572161de48b04229f547c350aa9ef80` — identical |
+| run 1 (broadsheet) | `out/entry.png`, 39,821 bytes |
+| run 2 (broadsheet) | `out2/entry.png`, 39,821 bytes |
+| sha256, both runs | `748cf7f695d50e6bc061c9134739519ed5d2a100cff359770b306f0a9d6306c8` — identical |
 | dimensions | 1024 × 1024 px, PNG, RGB |
-| size limit | 28,090 ≤ 1,048,576 bytes ✓ |
+| size limit | 39,821 ≤ 1,048,576 bytes ✓ |
 | default `/output` run | same sha256, exit 0 |
-| visual check (round 10) | viewed the round-10 render at full size and at 300 px: masthead date, all 6 headlines, all 6 pictures, IN BRIEF list (new EU, cricket and Tokyo-core lines) and footer fully readable, nothing clipped, nothing overlapping. Round-10 content changes only: two briefs swapped (EU summit, Brar debut), Tokyo brief gains "core", Jazan deck reworded; layout and pictures untouched. (Earlier rounds: ballot-box "65 - 130" label and storm "400 OFF" label removed, chip "2ND TERM" moved inside the picture.) |
+| visual check (broadsheet) | viewed the render at full size and at 300 px: masthead date and counter, all 12 headlines and pictures, the 24-item ALSO ON FRIDAY list, the pinned map, the UTC timeline, the DATE CHECK box, the tag legend and the footer all readable, nothing clipped, nothing overlapping. Fixes during the check: the drone blast was redrawn as a flame (it read as a red X), and the map labels for Gaza, London and Jazan were moved so no two numbers touch. (Earlier rounds: ballot-box "65 - 130" label and storm "400 OFF" label removed, chip "2ND TERM" moved inside the picture.) |
 
-## Stories in the image (all checked 27 Nov 2026, ≥2 sources each)
+## Stories in the image (all checked 27–28 Nov 2026, ≥1 named source each)
 
 | # | Story | Sources |
 |---|---|---|
@@ -61,24 +66,55 @@ Test results (2026-11-27, local Python 3.12.3; grader runs Python 3.13):
 | 04 Weather, USA | Storm wrecks US Thanksgiving — about 400 flights cancelled, over 900,000 lose power on the East Coast; Macy's parade postponed for the first time in its history. | WSJ, NDTV, Reuters |
 | 05 Energy, Jazan | Houthi hit kills worker at Saudi refinery — projectile strike on Aramco's Jazan refinery kills a Nepalese worker, halts some operations; Brent crude near $97. | Reuters, WSJ |
 | 06 Conflict, Kyiv | Zelensky warns of new mass strike — Ukraine has information Russia is preparing a new mass strike in the coming days; he urges people to heed missile alarms. | Reuters, Kyiv Post, NDTV |
-| Brief, EU | EU budget and EUR45bn Ukraine-loan talks stall — summit ends without agreement on the long-term budget or a new EUR45bn Ukraine loan. | Euronews, AP |
-| Brief, Argentina | Congress bars the central bank from printing money for the government, 141-0 in the lower house; Milei's anti-inflation charter. | AP, Al Jazeera, Straits Times |
-| Brief, Cricket | Gurnoor Brar strikes on India Test debut — debutant Brar takes his maiden Test wicket, trapping Devon Conway lbw for 31 with the last ball before lunch (NZ 77/1), 2nd Test, Christchurch. | Reuters, NDTV, The Week |
-| Brief, India | Delhi police free 164 foreigners in a cyber-slavery raid (92 Indonesians, 72 Malaysians). | NDTV |
-| Brief, Japan | Tokyo core prices rise 2.9% in November, up from 2.6% in October. | NDTV |
-| Brief, World | UN urges Sri Lanka to apologise for wartime attacks on humanitarian assistance. | UN via Scoop |
+| 07 Politics, Brussels | EU summit ends in disarray — no deal on the 2028–2034 budget or the EUR45bn Ukraine loan; 24 of 27 back the loan, Costa offers a EUR1.78tn compromise, next summit 17–18 Dec. | Euronews, AP, Xinhua |
+| 08 Conflict, Gaza | Hamas chief's son survives dawn strike — Izzeldeen al-Hayya, son of Hamas chief Khalil al-Hayya, survives a dawn strike on a Gaza City apartment; his daughter-in-law is wounded, no one is killed; Israel does not comment; Hamas links it to Katz threats. | Reuters |
+| 09 Retail, USA | Black Friday shoppers return to the malls — Adobe forecasts $12.9bn in online sales (+9.2%); NRF expects 126m shoppers on the day, 182.7m across the Thanksgiving weekend. | Reuters, Adobe, NRF |
+| 10 Markets | Asia rallies as Wall Street surges — Shanghai +3.2%, ChiNext +10%, Nikkei +2.0%, KOSPI +4.2%; S&P +1.6%, Nasdaq +2.3%, Dow +1.1% on a half day; gold rebounds +2.5% to about $3,670 after a 14-month low; silver +7.5%. | Morningstar/Dow Jones, Bloomberg, Investopedia |
+| 11 Sport, Christchurch | NZ reach 246 for 5 on day one, 2nd Test — Latham 59, Blundell 53 not out, Phillips 36 not out; debutant Gurnoor Brar takes his maiden Test wicket, Conway lbw 31 with the last ball before lunch; Akash Deep 2/52, Bumrah wicketless. | Reuters, NDTV, Dawn, Cricinfo |
+| 12 Conflict, West Africa | Militants kill 30 in two attacks — 13 soldiers in south-west Niger (attack Thu 26 Nov) and 17 villagers in Nigeria's Plateau state. | Reuters |
+| 13 USA | Trump lashes out at foes, migrants and his own data agency in a 461-word Thanksgiving post on Truth Social (posted Thu, reported Fri). | Reuters |
+| 14 Iraq | Trump backs Iraqi PM Ali al-Zaidi's crackdown on militias, oil smuggling and state control of weapons. | Reuters |
+| 15 Vietnam | CPTPP to start accession talks with the UAE, Indonesia and the Philippines. | Reuters |
+| 16 Frankfurt | De Cos to lead the ECB after Lagarde — chosen Thu 26 Nov, reported Fri 27 Nov; Boone and Brunnermeier join the board. | WSJ, Reuters, Le Monde |
+| 17 The Hague | ICC: Duterte trial opens Monday 30 Nov, 10:00 — 3 counts of crimes against humanity, 85 murders and 2 attempted murders, about 100 witnesses, 500+ victims. | ICC |
+| 18 Spain | Campaign ends Fri, snap vote Sun 29 Nov — Sánchez vows to defy the polls, the PP is favoured. | Reuters |
+| 19 Gaza City | Israeli strike hits an MSF clinic, 2 watchmen killed; MSF calls it a direct hit, its 17th staffer killed; Israel says both were Hamas military wing. | Al Jazeera |
+| 20 Guinea-Bissau | Military junta delays elections to Nov 2028. | Reuters |
+| 21 Kenya | Cult leader Paul Mackenzie convicted of terrorism charges (verdict Thu 26 Nov, reported Fri); already serving 200 years over about 190–200 child murders. | Reuters, Straits Times |
+| 22 Mexico | Mexico seeks talks with the US on SpaceX airspace use after Starship debris (Sheinbaum said Thu 26 Nov, reported Fri). | Reuters |
+| 23 UK | Anthony Williams guilty of 14 attempted murders in the train rampage (verdict Thu 26 Nov, reported Fri 27 Nov; attacks 31 Oct–1 Nov 2025, all survived). | AP |
+| 24 Canary Islands | 8 migrants dead, about 100 rescued from a boat. | Reuters |
+| 25 Egypt | Funerals held Fri for 31 killed in the Cairo tanker fire (crash Wed 25 Nov). | Al Jazeera |
+| 26 Rome | UN: FAO/WFP warn hunger will worsen in 16 hotspots, famine risk in Sudan and South Sudan. | UN News, ReliefWeb, Al Jazeera |
+| 27 India | Delhi police free 164 foreigners in a cyber-slavery raid (92 Indonesians, 72 Malaysians). | Reuters |
+| 28 Japan | Tokyo core prices rise 2.9% in November, up from 2.6% in October. | NDTV |
+| 29 Argentina | Congress bars the central bank from printing money for the government, 141-0 in the lower house; Milei's anti-inflation charter. | AP, Al Jazeera, Straits Times |
+| 30 Sri Lanka | UN urges Sri Lanka to apologise for wartime attacks on humanitarian assistance. | UN via Scoop |
+| 31 China | Huawei unveils a custom HBM design, 4096 data pins, twice Samsung/SK Hynix density, to be revealed at ISSCC in Feb 2027 (Bloomberg reported Thu 26 Nov, reported Fri). | Bloomberg, Silicon Report, Korea Herald |
+| 32 Canada | Supreme Court largely upholds Quebec's Bill 21 religious-symbols ban, 6-1, in a 520-page ruling. | WSJ, AP, Dawn |
+| 33 New York | UN chief condemns the Kuwait drone attacks. | UN News |
+| 34 Sudan | 383,000 fled Kordofan in the past year. | UN/IOM via UN News |
+| 35 Iraq | Iraq closes two Kurdish border crossings with Syria and Iran (reported Thu 26 Nov, in the Trump–Iraq article). | Reuters |
+| 36 Vienna | OPEC+ ministers meet Sunday as Brent nears $97. | Bloomberg, walldembrief |
 
 Notes on dating: the Kuwait strike, the Jazan refinery hit, the
-Zelensky warning and the Argentina vote happened on Thu 26 Nov, but
-all were first widely reported on Fri 27 Nov (Dawn dated 27 Nov,
-Reuters/Nikkei/ET dated 27 Nov); they are in scope under the rules,
-which cover events that happened, or were first reported, on 27
-November 2026 in any time zone. The masthead states this scope on the
-face of the image. (Round-10 fix: the birthright brief and the UK
-migration brief were removed — the Cooper ruling was handed down and
-reported Wed 25 Nov, and the ONS 77,000 figure was released Thu 26
-Nov, so neither met the 27 Nov rule; the EU summit and Brar debut
-briefs that replace them are both 27 Nov items.)
+Zelensky warning, the Argentina vote, the ECB choice, the Mackenzie
+verdict, the Mexico SpaceX request, the UK train verdict, the Huawei
+HBM report and the Iraq border closures happened on Thu 26 Nov, but
+all were first widely reported on Fri 27 Nov; they are in scope under
+the rules, which cover events that happened, or were first reported,
+on 27 November 2026 in any time zone. The masthead states this scope
+on the face of the image, and the DATE CHECK box names what was left
+out: the SpaceX Starmind clearance (FCC Wed 25 Nov), the UK
+migration release (ONS Thu 26 Nov), the birthright ruling (handed
+down Wed 25 Nov), the Gaza toll of ten (Thu 26 Nov, reported 26
+Nov), the Canary record arrivals (Tue 24 Nov, reported 25 Nov) and
+the Cairo tanker crash (Wed 25 Nov; the funerals, held Fri 27 Nov,
+are in). (Round-10 fix: the birthright brief and the UK migration
+brief were removed — the Cooper ruling was handed down and reported
+Wed 25 Nov, and the ONS 77,000 figure was released Thu 26 Nov, so
+neither met the 27 Nov rule; the EU summit and Brar debut briefs
+that replace them are both 27 Nov items.)
 Nothing in the image is invented; anything that could not be verified
 for 27 Nov was dropped.
 

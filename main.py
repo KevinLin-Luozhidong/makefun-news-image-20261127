@@ -1,26 +1,36 @@
 #!/usr/bin/env python3
 """make.fun news-image-20261127: one image summing up Friday 27 Nov 2026.
 
-Written fresh in this session for the 27 November bounty. Pure Python
-standard library only: the grader installs nothing and the program runs
-with no network, 1 CPU / 512 MB / 60 s. All news is embedded below, so
-nothing is fetched at run time. The program paints a 1024x1024
-newspaper front page and writes a deterministic PNG to
-/output/entry.png (or $MAKEFUN_OUTPUT_DIR).
+Broadsheet rebuild. Pure Python standard library only: the grader
+installs nothing and the program runs with no network, 1 CPU / 512 MB /
+60 s. All news is embedded below, so nothing is fetched at run time.
+The program paints a 1024x1024 broadsheet front page and writes a
+deterministic PNG to /output/entry.png (or $MAKEFUN_OUTPUT_DIR).
 
-Layout: masthead with the date, six lead stories in a 3-by-2 grid, each
-with its own code-drawn picture, then an IN BRIEF band with a simple
-world map and six one-line stories -- twelve stories in all. The day's
-scope follows the rules: events that happened, or were first reported,
-on 27 November 2026 in any time zone. Several leads happened on Thu 26
-Nov (Kuwait, Jazan, the Zelensky warning, the Argentina vote) and were
-first widely reported on Fri 27 Nov; the masthead says so on the face
-of the image.
+Layout: masthead with the date and a coverage counter, twelve lead
+stories (two big, ten compact) each with its own code-drawn picture,
+a numbered ALSO ON FRIDAY list of 24 more stories, a world map with
+numbered pins, a THE DAY IN UTC timeline, a DATE CHECK box naming
+what was left out and why, a tag legend and wire credits in the
+footer -- 36 dated stories in all.
 
-Every fact was checked on 27 Nov 2026 in at least two sources (see
-README.md). Claims are attributed where they are claims ("Italy and
-Kuwait blame Iran; Tehran denies it"). No photos, no portraits, no
-faces: every picture is drawn from rectangles, circles and lines.
+Scope follows the rules: events that happened, or were first
+reported, on 27 November 2026 in any time zone. Several items
+happened on Thu 26 Nov (Kuwait, Jazan, the Zelensky warning, the
+Argentina vote, the ECB choice, the Mackenzie verdict, the Mexico
+SpaceX request, the UK train verdict) and were first widely
+reported on Fri 27 Nov; the DATE CHECK box says so on the face of
+the image. Items that were already reported before 27 Nov -- the
+SpaceX Starmind clearance (25 Nov), the UK migration release
+(26 Nov), the birthright ruling (25 Nov), the Gaza toll of ten
+(26 Nov), the Canary record arrivals (24 Nov), the Cairo tanker
+crash (25 Nov) -- are left out, and the box names them.
+
+Every fact was checked on 27-28 Nov 2026 in at least one named
+wire or outlet (see README.md). Claims are tagged CLAIM and
+attributed where they are claims ("Italy and Kuwait blame Iran;
+Tehran denies it"). No photos, no portraits, no faces: every
+picture is drawn from rectangles, circles and lines.
 
 Run locally:
     mkdir -p out && MAKEFUN_OUTPUT_DIR=out python3 main.py
@@ -66,48 +76,145 @@ DARK = (19, 27, 35)
 # most 3 lines at scale 3 (17 chars a line) and a deck to at most 2
 # lines at scale 2 (27 chars a line), so headline and deck can never
 # run into each other or into the credit line at the foot of a card.
+# Tag meaning (the legend in the footer spells it out):
+#   OFFICIAL   = on the record.  CONFIRMED = two or more wires.
+#   REPORTED   = one named outlet.  CLAIM   = one side's account.
+# Big cards (01, 07) take a three-line headline at scale 3 and a
+# two-line deck at scale 2. Compact cards take a two-line headline
+# and a one-line deck, both at scale 2. Decks are one line long.
 LEADS = [
-    dict(code="01", kicker="GULF", city="KUWAIT", colour=SCARLET,
+    dict(code="01", city="KUWAIT", colour=SCARLET, tag="CONFIRMED",
          head="Two Italians killed in Kuwait drone strike",
-         deck="Italy, Kuwait blame Iran; Tehran denies it.",
+         deck="Italy and Kuwait blame Iran; Tehran denies it.",
          credit="CNN - WSJ - DAWN - REUTERS", art="drone"),
-    dict(code="02", kicker="POLITICS", city="WELLINGTON", colour=BLUE,
+    dict(code="02", city="WELLINGTON", colour=BLUE, tag="OFFICIAL",
          head="NZ coalition loses its majority",
-         deck="65 of 130 seats; Luxon needs Opportunity.",
-         credit="REUTERS - RNZ - NIKKEI", art="ballot"),
-    dict(code="03", kicker="TECH", city="NEW YORK", colour=PLUM,
+         deck="65 of 130 seats; one short.",
+         credit="RNZ", art="ballot"),
+    dict(code="03", city="NEW YORK", colour=PLUM, tag="REPORTED",
          head="Trump backs Huang return to Nvidia",
-         deck="Trump: he is no threat; return is a great thing.",
-         credit="STRAITS TIMES - ET - NDTV", art="chip"),
-    dict(code="04", kicker="WEATHER", city="USA", colour=TEAL,
+         deck="Trump: he is no threat, he says.",
+         credit="ET", art="chip"),
+    dict(code="04", city="USA", colour=TEAL, tag="CONFIRMED",
          head="Storm wrecks US Thanksgiving",
-         deck="400 flights cut; 900,000 lose power; parade put off.",
-         credit="WSJ - NDTV - REUTERS", art="storm"),
-    dict(code="05", kicker="ENERGY", city="JAZAN", colour=ORANGE,
+         deck="400 flights cut; 900,000 dark.",
+         credit="WSJ", art="storm"),
+    dict(code="05", city="JAZAN", colour=ORANGE, tag="REPORTED",
          head="Houthi hit kills worker at Saudi refinery",
-         deck="Some Jazan operations halted; Brent near $97.",
-         credit="REUTERS - WSJ", art="refinery"),
-    dict(code="06", kicker="CONFLICT", city="KYIV", colour=GOLD_DK,
+         deck="Some halted; Brent near $97.",
+         credit="REUTERS", art="refinery"),
+    dict(code="06", city="KYIV", colour=GOLD_DK, tag="CLAIM",
          head="Zelensky warns of new mass strike",
-         deck="Russia readying a strike, he says; heed the alarms.",
-         credit="REUTERS - KYIV POST - NDTV", art="alarm"),
+         deck="Heed the alarms, Zelensky says.",
+         credit="REUTERS", art="alarm"),
+    dict(code="07", city="BRUSSELS", colour=BLUE, tag="CONFIRMED",
+         head="EU summit stalls on budget and Ukraine loan",
+         deck="24 of 27 back the EUR45bn loan; no deal till December.",
+         credit="EURONEWS - AP", art="summit"),
+    dict(code="08", city="GAZA", colour=SCARLET, tag="REPORTED",
+         head="Hamas chief's son survives dawn strike",
+         deck="No deaths; daughter-in-law hurt.",
+         credit="REUTERS", art="gaza"),
+    dict(code="09", city="USA", colour=PLUM, tag="REPORTED",
+         head="Black Friday shoppers return to the malls",
+         deck="Adobe: $12.9bn online sales.",
+         credit="REUTERS", art="blackfriday"),
+    dict(code="10", city="MARKET", colour=GREEN, tag="CONFIRMED",
+         head="Asia rallies as Wall Street surges",
+         deck="Shanghai +3.2%; gold $3,670.",
+         credit="BLOOMBERG", art="markets"),
+    dict(code="11", city="CHCH", colour=TEAL, tag="CONFIRMED",
+         head="NZ reach 246 for 5 on day one",
+         deck="Brar debut wicket; Latham 59.",
+         credit="REUTERS", art="cricket"),
+    dict(code="12", city="W. AFRICA", colour=ORANGE, tag="REPORTED",
+         head="Militants kill 30 in Niger and Nigeria",
+         deck="13 soldiers; 17 villagers dead.",
+         credit="REUTERS", art="africa"),
 ]
 
-# One line each, at most 50 characters, so each fits the brief band.
-BRIEFS = [
-    "EU: Budget and EUR45bn Ukraine-loan talks stall.",
-    "ARGENTINA: Bank barred from printing money.",
-    "CRICKET: Brar strikes on India Test debut.",
-    "INDIA: Delhi police free 164 in cyber raid.",
-    "JAPAN: Tokyo core prices rise 2.9% in November.",
-    "WORLD: UN urges Sri Lanka wartime apology.",
+# The numbered ALSO ON FRIDAY list, stories 13 to 36. One line each,
+# at most 36 characters after the number, so each fits a half-width
+# column at scale 2. All happened, or were first widely reported, on
+# Fri 27 Nov 2026 (sources in README.md).
+ALSO = [
+    "USA: Trump holiday post attacks foes",
+    "IRAQ: Trump backs PM's crackdown",
+    "CPTPP: 3 nations join accession talks",
+    "ECB: De Cos to succeed Lagarde",
+    "ICC: Duterte trial opens Monday",
+    "SPAIN: Campaign ends; vote on Sunday",
+    "GAZA: MSF clinic hit; 2 killed",
+    "GUINEA-BISSAU: Vote delayed to 2028",
+    "KENYA: Cult leader convicted of terror",
+    "MEXICO: Seeks talks on SpaceX airspace",
+    "UK: Train rampage man guilty of 14",
+    "CANARIES: 8 dead on boat; 100 rescued",
+    "EGYPT: Funerals for 31 tanker dead",
+    "UN: Hunger to worsen in 16 hotspots",
+    "INDIA: Police free 164 in cyber raid",
+    "JAPAN: Tokyo core prices rise 2.9%",
+    "ARGENTINA: Bank printing money barred",
+    "SRI LANKA: UN urges wartime apology",
+    "CHINA: Huawei unveils custom HBM chip",
+    "CANADA: Top court upholds symbols ban",
+    "UN: Chief condemns Kuwait attacks",
+    "SUDAN: 383,000 fled Kordofan in a year",
+    "IRAQ: Two border crossings shut",
+    "OPEC+: Ministers meet Sunday",
 ]
-BRIEF_CREDIT = "EURONEWS - AP - REUTERS - NDTV - AL JAZEERA - UN"
+
+# The day in UTC, in time order. Each line fits one scale-2 row.
+TIMELINE = [
+    "00:16 EU summit ends",
+    "06:05 Asia rallies",
+    "09:25 CPTPP talks open",
+    "11:49 Niger attack kills 13",
+    "18:00 Wall St: S&P +1.6%",
+]
+
+# What was left out of the paper and why: every item below was
+# already reported before 27 Nov, so it fails the dating rule even
+# though it is real news. Each line fits one scale-2 row.
+DATECHECK = [
+    "Starmind: FCC Wed 25 Nov",
+    "UK migration: ONS Thu 26 Nov",
+    "Birthright: ruled Wed 25 Nov",
+    "Gaza 10 killed: Thu 26 Nov",
+    "Canary record: Tue 24 Nov",
+    "Egypt crash: Wed 25 Nov",
+]
+
+# Story places for the map pins: (story number, latitude, longitude,
+# label nudge dx, label nudge dy). Two pins share a city (New York,
+# Gaza, Baghdad, New Zealand), so those get a nudge to keep the
+# numbers apart.
+PINS = [
+    ("01", 29.3, 48.0, 0, 0), ("02", -41.3, 174.8, 0, -6),
+    ("03", 40.7, -74.0, 0, 0), ("04", 39.0, -77.0, 0, 8),
+    ("05", 16.9, 42.6, 0, 0), ("06", 50.5, 30.5, 0, 0),
+    ("07", 50.8, 4.4, 0, 0), ("08", 31.5, 34.5, 0, 0),
+    ("09", 40.0, -90.0, 0, -8), ("10", 31.2, 121.5, 0, 0),
+    ("11", -43.5, 172.6, 10, 4), ("12", 13.5, 2.1, 0, 0),
+    ("13", 38.9, -77.0, 8, -2), ("14", 33.3, 44.4, 0, 0),
+    ("15", 21.0, 105.8, 0, 0), ("16", 50.1, 8.7, 0, 0),
+    ("17", 52.1, 4.3, 0, -8), ("18", 40.4, -3.7, 0, 0),
+    ("19", 31.5, 34.5, -14, 8), ("20", 11.9, -15.6, 0, 0),
+    ("21", -4.0, 39.7, 0, 0), ("22", 19.4, -99.1, 0, 0),
+    ("23", 51.5, -0.1, 0, 0), ("24", 28.3, -16.6, 0, 0),
+    ("25", 30.0, 31.2, 0, 0), ("26", 41.9, 12.5, 0, 0),
+    ("27", 28.6, 77.2, 0, 0), ("28", 35.7, 139.7, 0, 0),
+    ("29", -34.6, -58.4, 0, 0), ("30", 6.9, 79.9, 0, 0),
+    ("31", 22.5, 114.1, 0, 0), ("32", 45.4, -75.7, 0, 0),
+    ("33", 40.7, -74.0, -14, 8), ("34", 12.0, 29.5, 0, 0),
+    ("35", 33.3, 44.4, -14, -8), ("36", 48.2, 16.4, 0, 0),
+]
 
 # ---- 5x7 letterforms -------------------------------------------------
 # Each letter is seven rows; each row is one integer whose five bits
-# are the pixels, leftmost pixel in the highest bit (16). Text is set
-# in capitals only, so only capitals, digits and punctuation are kept.
+# are the pixels, leftmost pixel in the highest bit (16). Headlines
+# are set in sentence case, so lowercase letters are kept too; the
+# masthead, tags and counters are written as capitals in the data.
 GLYPHS = {
     "A": (14, 17, 17, 31, 17, 17, 17),
     "B": (30, 17, 17, 30, 17, 17, 30),
@@ -135,6 +242,32 @@ GLYPHS = {
     "X": (17, 17, 10, 4, 10, 17, 17),
     "Y": (17, 17, 10, 4, 4, 4, 4),
     "Z": (31, 1, 2, 4, 8, 16, 31),
+    "a": (0, 14, 1, 15, 17, 17, 15),
+    "b": (16, 16, 30, 17, 17, 17, 17),
+    "c": (0, 0, 14, 17, 16, 17, 14),
+    "d": (1, 1, 13, 19, 17, 17, 15),
+    "e": (0, 0, 14, 17, 30, 16, 14),
+    "f": (6, 8, 8, 30, 8, 8, 8),
+    "g": (0, 15, 17, 17, 15, 1, 14),
+    "h": (16, 16, 22, 25, 17, 17, 17),
+    "i": (4, 0, 12, 4, 4, 4, 14),
+    "j": (2, 0, 6, 2, 2, 18, 12),
+    "k": (16, 16, 18, 20, 24, 20, 18),
+    "l": (12, 4, 4, 4, 4, 4, 14),
+    "m": (0, 0, 26, 21, 21, 21, 21),
+    "n": (0, 0, 22, 25, 17, 17, 17),
+    "o": (0, 0, 14, 17, 17, 17, 14),
+    "p": (0, 0, 30, 17, 17, 30, 16),
+    "q": (0, 0, 15, 17, 17, 15, 1),
+    "r": (0, 0, 22, 25, 16, 16, 16),
+    "s": (0, 0, 15, 16, 14, 1, 30),
+    "t": (8, 8, 30, 8, 8, 9, 6),
+    "u": (0, 0, 17, 17, 17, 19, 13),
+    "v": (0, 0, 17, 17, 17, 10, 4),
+    "w": (0, 0, 17, 21, 21, 21, 10),
+    "x": (0, 0, 17, 10, 4, 10, 17),
+    "y": (0, 0, 17, 17, 15, 1, 14),
+    "z": (0, 0, 31, 2, 4, 8, 31),
     "0": (14, 17, 19, 21, 25, 17, 14),
     "1": (4, 12, 4, 4, 4, 4, 14),
     "2": (14, 17, 1, 6, 8, 16, 31),
@@ -267,7 +400,7 @@ class Page:
     def glyphs(self, x, y, text, scale, colour):
         """Paint one scale-by-scale square per set bit of each glyph."""
         cx = x
-        for ch in text.upper():
+        for ch in text:
             rows = GLYPHS.get(ch, UNKNOWN_GLYPH)
             for r, bits in enumerate(rows):
                 for c in range(5):
@@ -278,220 +411,421 @@ class Page:
         return cx
 
     def centred(self, y, text, scale, colour):
-        x = (self.w - glyph_width(text.upper(), scale)) // 2
+        x = (self.w - glyph_width(text, scale)) // 2
         self.glyphs(x, y, text, scale, colour)
 
 
 # ---- pictures --------------------------------------------------------
 # One drawn picture per lead story, filling a (w x h) box. Shapes only:
 # no photos, no faces, no flags, no portraits.
+# ---- pictures --------------------------------------------------------
+# One drawn picture per lead story, filling a (w x h) box. Every scene
+# is drawn from fractions of the box, so the same code serves the big
+# cards (150 wide) and the compact cards (84 wide). Shapes only: no
+# photos, no faces, no flags, no portraits.
 def picture(pg, kind, x, y, w, h):
+    """Draw one scene. R/D/L/T take fractions of the box."""
+    def R(fx0, fy0, fx1, fy1, colour):
+        pg.box(x + int(fx0 * w), y + int(fy0 * h),
+               int((fx1 - fx0) * w), int((fy1 - fy0) * h), colour)
+
+    def D(fcx, fcy, fr, colour):
+        pg.disc(x + int(fcx * w), y + int(fcy * h),
+                max(1, int(fr * min(w, h))), colour)
+
+    def L(fx0, fy0, fx1, fy1, colour, thick=2):
+        pg.diag(x + int(fx0 * w), y + int(fy0 * h),
+                x + int(fx1 * w), y + int(fy1 * h), colour, thick)
+
+    def T(pts, colour):
+        pg.tri([(x + int(fx * w), y + int(fy * h)) for fx, fy in pts],
+               colour)
+
+    ts = 2 if w > 130 else 1  # letter scale for words inside a picture
     if kind == "drone":
-        pg.box(x, y, w, int(h * 0.55), SKY)
-        pg.box(x, y + int(h * 0.55), w, h - int(h * 0.55), (150, 148, 138))
+        R(0, 0, 1, 0.55, SKY)
+        R(0, 0.55, 1, 1, (150, 148, 138))
         # ground station: low block with a lit window row
-        pg.box(x + 18, y + h - 34, 96, 34, DARK)
-        for wx in range(x + 28, x + 100, 16):
-            pg.box(wx, y + h - 26, 7, 7, FLAME_Y)
-        # drone: centre body, four arms, spinning rotors
-        dx, dy = x + w // 2, y + 34
-        pg.box(dx - 26, dy - 5, 52, 10, DARK)
-        pg.box(dx - 8, dy - 8, 16, 16, (60, 66, 74))
-        for ax in (dx - 34, dx + 34):
-            pg.box(ax - 3, dy - 3, 6, 6, DARK)
-            pg.box(ax - 16, dy - 6, 32, 3, (90, 96, 104))
-        # blast starburst under the drone, smoke above it
-        for ddx, ddy in ((-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0),
-                         (-1, 1), (0, 1), (1, 1)):
-            pg.diag(dx, dy + 22, dx + ddx * 24, dy + 22 + ddy * 18, FLAME, 3)
-        pg.disc(dx, dy + 22, 6, FLAME_Y)
-        for cx, cy, r in ((dx - 30, y + 12, 8), (dx - 12, y + 6, 10),
-                          (dx + 8, y + 10, 7)):
-            pg.disc(cx, cy, r, SMOKE)
+        R(0.06, 0.72, 0.40, 1, DARK)
+        R(0.10, 0.80, 0.15, 0.88, FLAME_Y)
+        R(0.18, 0.80, 0.23, 0.88, FLAME_Y)
+        R(0.26, 0.80, 0.31, 0.88, FLAME_Y)
+        # drone: centre body, two arms, spinning rotors
+        R(0.38, 0.28, 0.62, 0.38, DARK)
+        R(0.46, 0.26, 0.54, 0.40, (60, 66, 74))
+        R(0.28, 0.30, 0.38, 0.36, DARK)
+        R(0.62, 0.30, 0.72, 0.36, DARK)
+        R(0.22, 0.28, 0.34, 0.31, (90, 96, 104))
+        R(0.66, 0.28, 0.78, 0.31, (90, 96, 104))
+        D(0.28, 0.32, 0.04, DARK)
+        D(0.72, 0.32, 0.04, DARK)
+        # blast flame under the drone, smoke above it
+        T([(0.44, 0.52), (0.50, 0.38), (0.56, 0.52)], FLAME)
+        D(0.5, 0.55, 0.04, FLAME_Y)
+        D(0.38, 0.10, 0.07, SMOKE)
+        D(0.48, 0.06, 0.08, SMOKE)
+        D(0.58, 0.11, 0.06, SMOKE)
     elif kind == "ballot":
-        pg.box(x, y, w, h, (222, 232, 238))
+        R(0, 0, 1, 1, (222, 232, 238))
         # parliament seats: rows of dots, one bloc in the lead colour
         for row in range(3):
             for col in range(9):
-                bx = x + 26 + col * 30
-                by = y + 14 + row * 18
-                pg.disc(bx, by, 6, BLUE if col < 5 else (150, 158, 166))
+                D(0.10 + col * 0.09, 0.14 + row * 0.16, 0.045,
+                  BLUE if col < 5 else (150, 158, 166))
         # ballot box with a big tick
-        pg.box(x + w - 118, y + h - 44, 92, 44, MAST)
-        pg.box(x + w - 104, y + h - 50, 64, 6, INK)
-        pg.diag(x + w - 104, y + h - 26, x + w - 84, y + h - 10, GOLD, 5)
-        pg.diag(x + w - 84, y + h - 10, x + w - 44, y + h - 40, GOLD, 5)
+        R(0.60, 0.62, 0.92, 0.96, MAST)
+        R(0.64, 0.56, 0.88, 0.62, INK)
+        L(0.66, 0.80, 0.72, 0.88, GOLD, 4)
+        L(0.72, 0.88, 0.88, 0.66, GOLD, 4)
     elif kind == "chip":
-        pg.box(x, y, w, h, NIGHT)
-        for sx, sy in ((16, 12), (60, 26), (120, 10), (200, 20), (260, 12),
-                       (300, 30), (90, 40), (180, 44)):
-            pg.disc(x + sx, y + sy, 2, WHITE)
-        # chip: square die, inner core, pins on all four sides
-        cx, cy = x + 110, y + 52
-        pg.box(cx - 34, cy - 34, 68, 68, (46, 58, 74))
-        pg.frame(cx - 34, cy - 34, 68, 68, GOLD, 2)
-        pg.box(cx - 16, cy - 16, 32, 32, GOLD)
+        R(0, 0, 1, 1, NIGHT)
+        pg.glyphs(x + int(0.08 * w), y + int(0.06 * h), "2ND TERM", ts,
+                  WHITE)
+        for sx, sy in ((0.08, 0.30), (0.25, 0.42), (0.55, 0.26),
+                       (0.85, 0.36), (0.95, 0.55), (0.35, 0.24)):
+            D(sx, sy, 0.015, WHITE)
+        # chip: square die, gold frame and core, pins on all sides
+        R(0.24, 0.28, 0.56, 0.72, (46, 58, 74))
+        R(0.24, 0.28, 0.56, 0.32, GOLD)
+        R(0.24, 0.68, 0.56, 0.72, GOLD)
+        R(0.24, 0.28, 0.28, 0.72, GOLD)
+        R(0.52, 0.28, 0.56, 0.72, GOLD)
+        R(0.36, 0.40, 0.44, 0.60, GOLD)
         for i in range(5):
-            off = -28 + i * 14
-            pg.box(cx + off, cy - 44, 4, 10, (150, 156, 164))
-            pg.box(cx + off, cy + 34, 4, 10, (150, 156, 164))
-            pg.box(cx - 44, cy + off, 10, 4, (150, 156, 164))
-            pg.box(cx + 34, cy + off, 10, 4, (150, 156, 164))
+            off = 0.28 + i * 0.06
+            R(off, 0.22, off + 0.02, 0.28, (150, 156, 164))
+            R(off, 0.72, off + 0.02, 0.78, (150, 156, 164))
+            R(0.18, off, 0.24, off + 0.02, (150, 156, 164))
+            R(0.56, off, 0.62, off + 0.02, (150, 156, 164))
         # rising arrow to the right of the chip
-        pg.diag(x + 210, y + 84, x + 262, y + 30, GREEN, 4)
-        pg.tri([(x + 262, y + 30), (x + 244, y + 30), (x + 262, y + 48)],
-               GREEN)
-        pg.glyphs(x + 196, y + 8, "2ND TERM", 2, WHITE)
+        L(0.66, 0.78, 0.90, 0.30, GREEN, 4)
+        T([(0.90, 0.30), (0.80, 0.30), (0.90, 0.44)], GREEN)
     elif kind == "storm":
-        pg.box(x, y, w, h, (96, 104, 116))
+        R(0, 0, 1, 1, (96, 104, 116))
         # dark cloud bank across the top, lightning fork
-        for cx, cy, r in ((60, 18, 22), (110, 10, 26), (170, 18, 22),
-                          (240, 12, 24), (290, 20, 18)):
-            pg.disc(x + cx, y + cy, r, (52, 58, 68))
-        pg.diag(x + 150, y + 30, x + 132, y + 58, FLAME_Y, 4)
-        pg.diag(x + 132, y + 58, x + 146, y + 58, FLAME_Y, 4)
-        pg.diag(x + 146, y + 58, x + 130, y + 84, FLAME_Y, 4)
+        D(0.18, 0.16, 0.12, (52, 58, 68))
+        D(0.38, 0.10, 0.14, (52, 58, 68))
+        D(0.58, 0.16, 0.12, (52, 58, 68))
+        D(0.80, 0.12, 0.12, (52, 58, 68))
+        L(0.48, 0.24, 0.42, 0.45, FLAME_Y, 3)
+        L(0.42, 0.45, 0.48, 0.45, FLAME_Y, 3)
+        L(0.48, 0.45, 0.42, 0.66, FLAME_Y, 3)
         # rain slashes
-        for rx in range(x + 12, x + w - 8, 26):
-            pg.diag(rx, y + 52, rx - 8, y + 78, (200, 210, 220), 2)
+        for fx in (0.08, 0.22, 0.36, 0.50, 0.64, 0.78, 0.92):
+            L(fx, 0.52, fx - 0.04, 0.68, (200, 210, 220), 2)
         # grounded plane silhouette, low, with a red tail
-        pg.box(x + 30, y + h - 26, 150, 10, DARK)
-        pg.tri([(x + 180, y + h - 26), (x + 210, y + h - 26),
-                (x + 180, y + h - 16)], DARK)
-        pg.box(x + 60, y + h - 38, 8, 12, SCARLET)
+        R(0.10, 0.78, 0.60, 0.88, DARK)
+        T([(0.60, 0.78), (0.72, 0.78), (0.60, 0.88)], DARK)
+        R(0.20, 0.68, 0.24, 0.78, SCARLET)
     elif kind == "refinery":
-        pg.box(x, y, w, int(h * 0.6), (236, 164, 74))
-        pg.box(x, y + int(h * 0.6), w, h - int(h * 0.6), (238, 198, 118))
+        R(0, 0, 1, 0.6, (236, 164, 74))
+        R(0, 0.6, 1, 1, (238, 198, 118))
+        pg.glyphs(x + int(0.62 * w), y + int(0.10 * h), "$97", ts,
+                  SCARLET)
         # two distillation towers and a pipe run
-        pg.box(x + 40, y + 18, 26, h - 18, DARK)
-        pg.box(x + 86, y + 34, 22, h - 34, (52, 58, 66))
-        pg.box(x + 40, y + h - 16, w - 80, 8, DARK)
-        for wy in range(y + 30, y + h - 20, 16):
-            pg.box(x + 48, wy, 5, 5, FLAME_Y)
+        R(0.12, 0.18, 0.20, 1, DARK)
+        R(0.26, 0.34, 0.32, 1, (52, 58, 66))
+        R(0.12, 0.86, 0.80, 0.92, DARK)
+        R(0.145, 0.30, 0.165, 0.38, FLAME_Y)
+        R(0.145, 0.46, 0.165, 0.54, FLAME_Y)
+        R(0.145, 0.62, 0.165, 0.70, FLAME_Y)
         # flame and smoke at the far tower
-        pg.tri([(x + 150, y + 52), (x + 164, y + 16), (x + 178, y + 52)],
-               FLAME)
-        pg.tri([(x + 158, y + 52), (x + 164, y + 30), (x + 170, y + 52)],
-               FLAME_Y)
-        for cx, cy, r in ((150, 22, 9), (170, 12, 11), (188, 22, 8)):
-            pg.disc(x + cx, y + cy, r, SMOKE)
-        pg.glyphs(x + 210, y + 14, "$97", 4, SCARLET)
+        T([(0.44, 0.52), (0.50, 0.16), (0.56, 0.52)], FLAME)
+        T([(0.47, 0.52), (0.50, 0.30), (0.53, 0.52)], FLAME_Y)
+        D(0.44, 0.20, 0.05, SMOKE)
+        D(0.52, 0.12, 0.06, SMOKE)
+        D(0.60, 0.20, 0.05, SMOKE)
     elif kind == "alarm":
-        pg.box(x, y, w, h, NIGHT)
-        for sx, sy in ((18, 14), (70, 28), (140, 12), (210, 24), (270, 14),
-                       (310, 30), (110, 40)):
-            pg.disc(x + sx, y + sy, 2, WHITE)
-        # alarm bell centre-left, sound arcs to its right
-        bx, by = x + 90, y + 58
-        pg.tri([(bx - 30, by + 22), (bx, by - 26), (bx + 30, by + 22)],
-               GOLD)
-        pg.box(bx - 36, by + 22, 72, 8, GOLD)
-        pg.disc(bx, by + 36, 6, FLAME_Y)
-        for r in (30, 42, 54):
-            pg.hoop(bx + 44, by, r, FLAME, 2)
+        R(0, 0, 1, 1, NIGHT)
+        for sx, sy in ((0.08, 0.12), (0.30, 0.24), (0.55, 0.10),
+                       (0.82, 0.20), (0.94, 0.30), (0.45, 0.36)):
+            D(sx, sy, 0.015, WHITE)
+        # alarm bell centre-left, sound rings to its right
+        T([(0.14, 0.62), (0.28, 0.24), (0.42, 0.62)], GOLD)
+        R(0.10, 0.62, 0.46, 0.70, GOLD)
+        D(0.28, 0.76, 0.05, FLAME_Y)
+        for rr in (0.10, 0.16, 0.22):
+            pg.hoop(x + int(0.55 * w), y + int(0.44 * h),
+                    max(2, int(rr * min(w, h))), FLAME, 2)
         # city silhouette below
-        for bx0, bw, bh in ((180, 42, 44), (230, 34, 60), (272, 46, 38)):
-            pg.box(x + bx0, y + h - bh, bw, bh, (8, 12, 22))
-            pg.box(x + bx0 + 8, y + h - bh + 10, 4, 4, FLAME_Y)
-            pg.box(x + bx0 + 20, y + h - bh + 20, 4, 4, FLAME_Y)
+        R(0.56, 0.62, 0.68, 1, (8, 12, 22))
+        R(0.70, 0.52, 0.80, 1, (8, 12, 22))
+        R(0.82, 0.66, 0.94, 1, (8, 12, 22))
+        R(0.59, 0.70, 0.61, 0.74, FLAME_Y)
+        R(0.73, 0.62, 0.75, 0.66, FLAME_Y)
+        R(0.85, 0.74, 0.87, 0.78, FLAME_Y)
+    elif kind == "summit":
+        R(0, 0, 1, 1, (228, 234, 240))
+        pg.glyphs(x + int(0.30 * w), y + int(0.06 * h), "NO DEAL", ts,
+                  SCARLET)
+        # flags at both ends of the hall
+        R(0.06, 0.10, 0.08, 0.52, INK)
+        T([(0.08, 0.10), (0.20, 0.16), (0.08, 0.22)], TEAL)
+        R(0.92, 0.10, 0.94, 0.52, INK)
+        T([(0.92, 0.10), (0.80, 0.16), (0.92, 0.22)], GOLD_DK)
+        # chairs behind a long table, papers on the table
+        R(0.14, 0.38, 0.22, 0.52, DARK)
+        R(0.36, 0.38, 0.44, 0.52, DARK)
+        R(0.56, 0.38, 0.64, 0.52, DARK)
+        R(0.78, 0.38, 0.86, 0.52, DARK)
+        R(0.10, 0.52, 0.90, 0.62, MAST)
+        R(0.16, 0.62, 0.20, 0.86, MAST)
+        R(0.80, 0.62, 0.84, 0.86, MAST)
+        R(0.26, 0.54, 0.34, 0.60, WHITE)
+        R(0.48, 0.54, 0.56, 0.60, WHITE)
+        R(0.68, 0.54, 0.76, 0.60, WHITE)
+        # a red cross over the middle paper: no deal signed
+        L(0.46, 0.52, 0.58, 0.62, SCARLET, 3)
+        L(0.58, 0.52, 0.46, 0.62, SCARLET, 3)
+    elif kind == "gaza":
+        R(0, 0, 1, 0.35, (242, 166, 92))
+        R(0, 0.35, 1, 0.62, (238, 198, 118))
+        R(0, 0.62, 1, 1, (120, 110, 100))
+        # low sun over a dawn skyline, one roof broken
+        D(0.78, 0.18, 0.09, FLAME_Y)
+        R(0.08, 0.42, 0.24, 0.92, DARK)
+        R(0.28, 0.52, 0.44, 0.92, (52, 58, 66))
+        R(0.48, 0.38, 0.62, 0.92, DARK)
+        R(0.66, 0.56, 0.82, 0.92, (52, 58, 66))
+        R(0.86, 0.48, 0.96, 0.92, DARK)
+        T([(0.48, 0.38), (0.55, 0.30), (0.62, 0.38)], DARK)
+        # smoke rising from the broken roof
+        D(0.55, 0.28, 0.05, SMOKE)
+        D(0.58, 0.18, 0.07, SMOKE)
+        D(0.52, 0.10, 0.05, SMOKE)
+        # lit windows in the standing blocks
+        R(0.11, 0.50, 0.13, 0.55, FLAME_Y)
+        R(0.51, 0.46, 0.53, 0.51, FLAME_Y)
+        R(0.69, 0.64, 0.71, 0.69, FLAME_Y)
+    elif kind == "blackfriday":
+        R(0, 0, 1, 1, (232, 228, 218))
+        # shopfront: striped awning, lit windows, door
+        R(0.06, 0.30, 0.94, 0.92, MAST)
+        R(0.06, 0.30, 0.94, 0.40, WHITE)
+        for fx in (0.06, 0.22, 0.38, 0.54, 0.70, 0.86):
+            R(fx, 0.30, fx + 0.08, 0.40, SCARLET)
+        pg.glyphs(x + int(0.36 * w), y + int(0.44 * h), "SALE", ts,
+                  SCARLET)
+        R(0.12, 0.52, 0.34, 0.72, SKY)
+        R(0.66, 0.52, 0.88, 0.72, SKY)
+        R(0.42, 0.58, 0.58, 0.92, WHITE)
+        R(0.42, 0.58, 0.44, 0.92, GOLD)
+        R(0.56, 0.58, 0.58, 0.92, GOLD)
+        # shopping bags and a queue at the door
+        R(0.13, 0.82, 0.15, 0.86, INK)
+        R(0.10, 0.86, 0.22, 0.98, SCARLET)
+        R(0.29, 0.84, 0.31, 0.88, INK)
+        R(0.26, 0.88, 0.36, 0.98, TEAL)
+        D(0.70, 0.94, 0.03, DARK)
+        D(0.80, 0.94, 0.03, DARK)
+        D(0.90, 0.94, 0.03, DARK)
+    elif kind == "markets":
+        R(0, 0, 1, 1, (238, 240, 236))
+        # grid, then five rising candlesticks with wicks
+        R(0.08, 0.25, 0.92, 0.27, RULE)
+        R(0.08, 0.50, 0.92, 0.52, RULE)
+        R(0.08, 0.75, 0.92, 0.77, RULE)
+        for fx, fy in ((0.12, 0.60), (0.24, 0.52), (0.36, 0.42),
+                       (0.48, 0.34), (0.60, 0.22)):
+            R(fx, fy, fx + 0.08, 0.90, GREEN)
+            R(fx + 0.03, fy - 0.06, fx + 0.05, fy, GREEN)
+        # rising arrow over the bars, gold coin at the foot
+        L(0.10, 0.62, 0.88, 0.14, GREEN, 3)
+        T([(0.88, 0.14), (0.76, 0.14), (0.88, 0.30)], GREEN)
+        D(0.82, 0.82, 0.09, GOLD)
+        D(0.82, 0.82, 0.05, GOLD_DK)
+    elif kind == "cricket":
+        R(0, 0, 1, 1, (196, 214, 178))
+        pg.glyphs(x + int(0.58 * w), y + int(0.08 * h), "246/5", ts,
+                  INK)
+        # the strip, crease lines, stumps at both ends
+        R(0.30, 0.10, 0.52, 0.90, (222, 205, 164))
+        R(0.30, 0.22, 0.52, 0.25, WHITE)
+        R(0.30, 0.72, 0.52, 0.75, WHITE)
+        for fy in (0.10, 0.72):
+            R(0.38, fy, 0.40, fy + 0.12, GOLD_DK)
+            R(0.42, fy, 0.44, fy + 0.12, GOLD_DK)
+            R(0.46, fy, 0.48, fy + 0.12, GOLD_DK)
+        # bat, ball, fielders
+        L(0.62, 0.30, 0.78, 0.62, INK, 4)
+        D(0.82, 0.70, 0.05, SCARLET)
+        D(0.12, 0.30, 0.03, WHITE)
+        D(0.88, 0.30, 0.03, WHITE)
+        D(0.12, 0.70, 0.03, WHITE)
+    elif kind == "africa":
+        R(0, 0, 1, 0.55, (244, 196, 120))
+        R(0, 0.55, 1, 1, (198, 158, 92))
+        # sun, flat-top acacia, two huts with smoke
+        D(0.82, 0.16, 0.08, FLAME_Y)
+        R(0.14, 0.34, 0.18, 0.66, DARK)
+        R(0.06, 0.28, 0.30, 0.36, DARK)
+        R(0.10, 0.24, 0.26, 0.30, DARK)
+        T([(0.42, 0.78), (0.50, 0.58), (0.58, 0.78)], (120, 90, 60))
+        T([(0.60, 0.78), (0.68, 0.58), (0.76, 0.78)], (120, 90, 60))
+        R(0.48, 0.70, 0.52, 0.78, DARK)
+        R(0.66, 0.70, 0.70, 0.78, DARK)
+        D(0.50, 0.50, 0.04, SMOKE)
+        D(0.52, 0.40, 0.05, SMOKE)
+        D(0.49, 0.30, 0.04, SMOKE)
+        # red alert triangle over the huts
+        T([(0.84, 0.88), (0.92, 0.68), (0.98, 0.88)], SCARLET)
+        R(0.905, 0.74, 0.925, 0.82, WHITE)
+        D(0.915, 0.85, 0.015, WHITE)
 
 
 def world_map(pg, x, y, w, h):
-    """A plain world map: grey-blue sea, green land blobs, red dots
-    at the day's story places (Kuwait, Jazan, Kyiv, UK, NZ, US,
-    Argentina, India, Japan, Sri Lanka)."""
+    """A plain world map: grey-blue sea, green land blobs, and a red
+    pin for every one of the 36 stories, placed by latitude and
+    longitude on a flat projection. The twelve leads get a ringed pin
+    with their number; the twenty-four briefs get a plain dot, so the
+    crowded parts of the map stay readable."""
     pg.box(x, y, w, h, (230, 236, 242))
     pg.frame(x, y, w, h, RULE, 1)
     blobs = [
-        (30, 44, 24), (54, 62, 17), (62, 100, 15),
-        (146, 38, 11), (154, 74, 19),
-        (210, 44, 28), (234, 80, 11),
-        (260, 108, 11),
+        (0.16, 0.30, 0.10), (0.24, 0.42, 0.08), (0.30, 0.55, 0.06),
+        (0.30, 0.62, 0.07), (0.33, 0.78, 0.05),
+        (0.48, 0.28, 0.05), (0.52, 0.34, 0.04),
+        (0.52, 0.52, 0.09), (0.55, 0.66, 0.06),
+        (0.68, 0.28, 0.11), (0.78, 0.40, 0.08), (0.62, 0.42, 0.06),
+        (0.78, 0.58, 0.05),
+        (0.86, 0.74, 0.06),
+        (0.94, 0.86, 0.02),
     ]
-    for cx, cy, r in blobs:
-        pg.disc(x + cx, y + cy, r, LAND)
-        pg.disc(x + cx + 8, y + cy + 6, max(2, r - 6), LAND)
-    dots = [
-        (204, 56), (198, 64), (178, 50), (144, 70),
-        (274, 100), (34, 52), (54, 92), (236, 48),
-        (262, 58), (240, 74),
-    ]
-    for dx, dy in dots:
-        pg.disc(x + dx, y + dy, 4, SCARLET)
-        pg.hoop(x + dx, y + dy, 6, WHITE, 1)
+    for fx, fy, fr in blobs:
+        pg.disc(x + int(fx * w), y + int(fy * h),
+                max(2, int(fr * min(w, h))), LAND)
+    for no, lat, lon, dx, dy in PINS:
+        px = x + int((lon + 180.0) / 360.0 * w) + dx
+        py = y + int((90.0 - lat) / 180.0 * h) + dy
+        if int(no) <= 12:
+            # a lead story: a ringed pin with its number beside it.
+            # Gaza (08) and London (23) sit left of a neighbour's
+            # number, so their numbers go on the left; Jazan (05)
+            # sits under Kuwait (01), so its number drops two lower.
+            pg.disc(px, py, 3, SCARLET)
+            pg.hoop(px, py, 5, WHITE, 1)
+            lx = px - 17 if no in ("08", "23") else px + 5
+            if lx + 12 > x + w:
+                lx = px - 17
+            ly = py - 4 + (2 if no == "05" else 0)
+            if ly < y:
+                ly = y
+            if ly + 7 > y + h:
+                ly = y + h - 7
+            pg.glyphs(lx, ly, no, 1, SCARLET)
+        else:
+            # a brief: a plain dot, no number, so Europe does not
+            # turn into a pile of overlapping digits
+            pg.disc(px, py, 2, SCARLET)
 
 
 # ---- page ------------------------------------------------------------
 def build_page():
     pg = Page(PAGE_W, PAGE_H, PAPER)
 
-    # masthead: nameplate, date in red, scope line, red + ink rules
-    pg.centred(14, "THE WORLD IN ONE DAY", 5, MAST)
-    pg.centred(54, "FRIDAY 27 NOVEMBER 2026", 4, SCARLET)
-    pg.centred(90, "TWELVE STORIES THAT DEFINED THE DAY - INCLUDING FIRST REPORTED FRI 27 NOV",
+    # masthead: nameplate, date in red, coverage counter, red + ink rules
+    pg.centred(10, "THE WORLD IN ONE DAY", 5, MAST)
+    pg.centred(50, "FRIDAY 27 NOVEMBER 2026", 4, SCARLET)
+    pg.centred(82, "36 STORIES - 7 REGIONS - 12 FIELDS - HAPPENED OR FIRST REPORTED 27 NOV 2026",
                2, GREY)
-    pg.box(0, 112, PAGE_W, 4, SCARLET)
-    pg.box(0, 118, PAGE_W, 2, INK)
+    pg.box(0, 100, PAGE_W, 4, SCARLET)
+    pg.box(0, 106, PAGE_W, 2, INK)
 
-    # six lead cards: 3 columns by 2 rows
-    margin, gap = 18, 12
-    cw = (PAGE_W - 2 * margin - 2 * gap) // 3
-    ch = 300
-    top = 126
-    for i, story in enumerate(LEADS):
-        col, row = i % 3, i // 3
+    # twelve lead cards: two big (01, 07) on the first row, then ten
+    # compact cards in two columns. Card width 491, gap 10, margin 16.
+    margin, gap = 16, 10
+    cw = (PAGE_W - 2 * margin - gap) // 2
+    big = [LEADS[0], LEADS[6]]
+    small = [LEADS[i] for i in range(12) if i not in (0, 6)]
+    for col, story in enumerate(big):
         x = margin + col * (cw + gap)
-        y = top + row * (ch + gap)
+        y = 108
         colour = story["colour"]
-        pg.box(x, y, cw, ch, CARD)
-        pg.frame(x, y, cw, ch, RULE, 1)
+        pg.box(x, y, cw, 148, CARD)
+        pg.frame(x, y, cw, 148, RULE, 1)
         pg.box(x, y, cw, 6, colour)
-        picture(pg, story["art"], x + 8, y + 12, cw - 16, 100)
-        # number disc + kicker - city
-        pg.disc(x + 24, y + 132, 13, colour)
-        num = story["code"]
-        pg.glyphs(x + 24 - glyph_width(num, 2) // 2, y + 125,
-                  num, 2, WHITE)
-        pg.glyphs(x + 44, y + 125,
-                  story["kicker"] + " - " + story["city"], 2, colour)
-        # headline, up to 3 lines at scale 3; the deck starts below
-        # however many headline lines there are, so they never meet
-        ty = y + 154
+        picture(pg, story["art"], x + 8, y + 6, 148, 132)
+        tx = x + 164
+        pg.glyphs(tx, y + 6,
+                  story["code"] + " " + story["city"] + " - "
+                  + story["tag"], 2, colour)
+        # headline, up to 3 lines at scale 3; deck fixed below it
+        ty = y + 22
         for line in split_lines(story["head"], 17)[:3]:
-            pg.glyphs(x + 14, ty, line, 3, INK)
-            ty += 24
-        # deck, up to 2 lines at scale 2
-        dy = ty + 6
-        for line in split_lines(story["deck"], 27)[:2]:
-            pg.glyphs(x + 14, dy, line, 2, BODY)
-            dy += 19
+            pg.glyphs(tx, ty, line, 3, INK)
+            ty += 23
+        dy = y + 94
+        for line in split_lines(story["deck"], 26)[:2]:
+            pg.glyphs(tx, dy, line, 2, BODY)
+            dy += 18
         # credit line at the foot of the card
-        pg.box(x + 14, y + ch - 26, cw - 28, 1, RULE)
-        pg.glyphs(x + 14, y + ch - 18, story["credit"], 2, GREY)
+        pg.box(tx, y + 130, cw - 164 - 8, 1, RULE)
+        pg.glyphs(tx, y + 133, story["credit"], 2, GREY)
 
-    # IN BRIEF band: world map on the left, six one-liners on the right
-    band_y = top + 2 * ch + gap + 12
-    pg.box(margin, band_y, 16, 16, SCARLET)
-    pg.glyphs(margin + 24, band_y, "IN BRIEF", 3, SCARLET)
-    pg.box(margin + 150, band_y + 8, PAGE_W - 2 * margin - 150, 1, RULE)
-    world_map(pg, margin, band_y + 26, 320, 168)
-    bx = margin + 336
-    for j, item in enumerate(BRIEFS):
-        iy = band_y + 30 + j * 27
-        pg.disc(bx + 6, iy + 6, 5, SCARLET)
-        pg.glyphs(bx + 18, iy, item, 2, INK)
+    # ten compact cards: picture left, tag line, two-line headline,
+    # one-line deck. Rows are 65 high with a 6 gap.
+    for i, story in enumerate(small):
+        col, row = i % 2, i // 2
+        x = margin + col * (cw + gap)
+        y = 262 + row * 71
+        colour = story["colour"]
+        pg.box(x, y, cw, 65, CARD)
+        pg.frame(x, y, cw, 65, RULE, 1)
+        pg.box(x, y, 6, 65, colour)
+        picture(pg, story["art"], x + 14, y + 7, 76, 50)
+        tx = x + 98
+        pg.glyphs(tx, y + 3,
+                  story["code"] + " " + story["city"] + " - "
+                  + story["tag"] + " - " + story["credit"], 2, colour)
+        ty = y + 18
+        for line in split_lines(story["head"], 32)[:2]:
+            pg.glyphs(tx, ty, line, 2, INK)
+            ty += 16
+        pg.glyphs(tx, y + 50, story["deck"], 2, BODY)
 
-    # footer: sources, then the drawn-graphics note
-    fy = band_y + 26 + 168 + 10
+    # ALSO ON FRIDAY: stories 13 to 36, two columns of twelve
+    ay = 617
+    pg.box(margin, ay, 16, 16, SCARLET)
+    pg.glyphs(margin + 24, ay, "ALSO ON FRIDAY", 3, SCARLET)
+    pg.box(300, ay + 8, PAGE_W - 32 - 300, 1, RULE)
+    for j, item in enumerate(ALSO):
+        col, row = j % 2, j // 2
+        x = margin + col * (cw + gap)
+        iy = 639 + row * 15
+        pg.glyphs(x + 8, iy, "%02d" % (13 + j), 2, SCARLET)
+        pg.glyphs(x + 44, iy, item, 2, INK)
+
+    # bottom band: story locator map, UTC timeline, date check
+    by = 825
+    pg.glyphs(margin, by, "STORY LOCATOR", 2, SCARLET)
+    pg.glyphs(332, by, "THE DAY IN UTC", 2, SCARLET)
+    pg.glyphs(678, by, "DATE CHECK: LEFT OUT", 2, SCARLET)
+    world_map(pg, margin, by + 18, 300, 92)
+    pg.glyphs(margin, by + 114, "PIN NUMBERS MATCH THE STORIES ABOVE.", 1,
+              GREY)
+    ty = by + 18
+    for line in TIMELINE:
+        pg.glyphs(332, ty, line, 2, INK)
+        ty += 17
+    dy = by + 18
+    for line in DATECHECK:
+        pg.glyphs(678, dy, line, 2, INK)
+        dy += 17
+
+    # footer: tag legend, then the wire credits
+    fy = 950
     pg.box(0, fy, PAGE_W, 2, INK)
-    pg.glyphs(20, fy + 10,
-              "SOURCES: REUTERS, AP, CNN, WSJ, DAWN, NIKKEI, STRAITS TIMES, ET,",
+    pg.glyphs(20, fy + 8,
+              "HOW SURE: OFFICIAL = ON RECORD - CONFIRMED = 2+ WIRES",
               2, GREY)
-    pg.glyphs(20, fy + 30,
-              "RNZ, KYIV POST, NDTV, AL JAZEERA, EURONEWS, UN.",
+    pg.glyphs(20, fy + 23,
+              "REPORTED = NAMED OUTLET - CLAIM = ONE SIDE'S ACCOUNT",
               2, GREY)
-    pg.glyphs(20, fy + 50,
-              "ALL GRAPHICS DRAWN IN CODE; NO PHOTOS, NO PORTRAITS.",
+    pg.glyphs(20, fy + 38,
+              "SOURCES: REUTERS, AP, CNN, WSJ, DAWN, NIKKEI, STRAITS TIMES, ET, RNZ,",
+              2, GREY)
+    pg.glyphs(20, fy + 53,
+              "KYIV POST, NDTV, AL JAZEERA, EURONEWS, UN, BLOOMBERG, ICC, AFP, SCMP.",
               2, GREY)
     return pg
 
