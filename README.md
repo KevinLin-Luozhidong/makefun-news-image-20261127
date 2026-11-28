@@ -48,13 +48,13 @@ Test results (2026-11-28, local Python 3.12.3; grader runs Python 3.13):
 
 | check | result |
 |---|---|
-| run 1 (broadsheet) | `out/entry.png`, 39,821 bytes |
-| run 2 (broadsheet) | `out2/entry.png`, 39,821 bytes |
-| sha256, both runs | `748cf7f695d50e6bc061c9134739519ed5d2a100cff359770b306f0a9d6306c8` — identical |
+| run 1 (broadsheet, fact-fix) | `out/entry.png`, 39,819 bytes |
+| run 2 (broadsheet, fact-fix) | `out2/entry.png`, 39,819 bytes |
+| sha256, both runs | `52b8269f4c62b7d32f4c16cb13b52cce8d2cf36356104eab02f11f66074cbaa9` — identical |
 | dimensions | 1024 × 1024 px, PNG, RGB |
-| size limit | 39,821 ≤ 1,048,576 bytes ✓ |
+| size limit | 39,819 ≤ 1,048,576 bytes ✓ |
 | default `/output` run | same sha256, exit 0 |
-| visual check (broadsheet) | viewed the render at full size and at 300 px: masthead date and counter, all 12 headlines and pictures, the 24-item ALSO ON FRIDAY list, the pinned map, the UTC timeline, the DATE CHECK box, the tag legend and the footer all readable, nothing clipped, nothing overlapping. Fixes during the check: the drone blast was redrawn as a flame (it read as a red X), and the map labels for Gaza, London and Jazan were moved so no two numbers touch. (Earlier rounds: ballot-box "65 - 130" label and storm "400 OFF" label removed, chip "2ND TERM" moved inside the picture.) |
+| visual check (fact-fix) | viewed the render at full size and at 300 px: masthead date and counter, all 12 headlines and pictures, the 24-item ALSO ON FRIDAY list, the pinned map, the UTC timeline, the DATE CHECK box, the tag legend and the footer all readable, nothing clipped, nothing overlapping. Fixes in this round: lead 12 rewritten to the Niger Sanam attack alone (Nigeria reprisal dropped), Black Friday deck marked as an Adobe forecast, Shanghai +3.2% corrected to the +3.7% final close. (Broadsheet check: the drone blast was redrawn as a flame (it read as a red X), and the map labels for Gaza, London and Jazan were moved so no two numbers touch. Earlier rounds: ballot-box "65 - 130" label and storm "400 OFF" label removed, chip "2ND TERM" moved inside the picture.) |
 
 ## Stories in the image (all checked 27–28 Nov 2026, ≥1 named source each)
 
@@ -69,9 +69,9 @@ Test results (2026-11-28, local Python 3.12.3; grader runs Python 3.13):
 | 07 Politics, Brussels | EU summit ends in disarray — no deal on the 2028–2034 budget or the EUR45bn Ukraine loan; 24 of 27 back the loan, Costa offers a EUR1.78tn compromise, next summit 17–18 Dec. | Euronews, AP, Xinhua |
 | 08 Conflict, Gaza | Hamas chief's son survives dawn strike — Izzeldeen al-Hayya, son of Hamas chief Khalil al-Hayya, survives a dawn strike on a Gaza City apartment; his daughter-in-law is wounded, no one is killed; Israel does not comment; Hamas links it to Katz threats. | Reuters |
 | 09 Retail, USA | Black Friday shoppers return to the malls — Adobe forecasts $12.9bn in online sales (+9.2%); NRF expects 126m shoppers on the day, 182.7m across the Thanksgiving weekend. | Reuters, Adobe, NRF |
-| 10 Markets | Asia rallies as Wall Street surges — Shanghai +3.2%, ChiNext +10%, Nikkei +2.0%, KOSPI +4.2%; S&P +1.6%, Nasdaq +2.3%, Dow +1.1% on a half day; gold rebounds +2.5% to about $3,670 after a 14-month low; silver +7.5%. | Morningstar/Dow Jones, Bloomberg, Investopedia |
+| 10 Markets | Asia rallies as Wall Street surges — Shanghai +3.7%, ChiNext +10%, Nikkei +2.0%, KOSPI +4.2%; S&P +1.6%, Nasdaq +2.3%, Dow +1.1% on a half day; gold rebounds +2.5% to about $3,670 after a 14-month low; silver +7.5%. | Morningstar/Dow Jones, Bloomberg, Investopedia |
 | 11 Sport, Christchurch | NZ reach 246 for 5 on day one, 2nd Test — Latham 59, Blundell 53 not out, Phillips 36 not out; debutant Gurnoor Brar takes his maiden Test wicket, Conway lbw 31 with the last ball before lunch; Akash Deep 2/52, Bumrah wicketless. | Reuters, NDTV, Dawn, Cricinfo |
-| 12 Conflict, West Africa | Militants kill 30 in two attacks — 13 soldiers in south-west Niger (attack Thu 26 Nov) and 17 villagers in Nigeria's Plateau state. | Reuters |
+| 12 Conflict, Niger | Niger camp attack kills 13 guards — 13 National Guard killed in the Sanam camp attack (Thu 26 Nov, reported Fri 27 Nov). The Nigeria reprisal story (30 killed, Tue 24 Nov, reported 25–26 Nov) was dropped: not a 27-Nov event. | Al Jazeera |
 | 13 USA | Trump lashes out at foes, migrants and his own data agency in a 461-word Thanksgiving post on Truth Social (posted Thu, reported Fri). | Reuters |
 | 14 Iraq | Trump backs Iraqi PM Ali al-Zaidi's crackdown on militias, oil smuggling and state control of weapons. | Reuters |
 | 15 Vietnam | CPTPP to start accession talks with the UAE, Indonesia and the Philippines. | Reuters |
@@ -114,7 +114,11 @@ are in). (Round-10 fix: the birthright brief and the UK migration
 brief were removed — the Cooper ruling was handed down and reported
 Wed 25 Nov, and the ONS 77,000 figure was released Thu 26 Nov, so
 neither met the 27 Nov rule; the EU summit and Brar debut briefs
-that replace them are both 27 Nov items.)
+that replace them are both 27 Nov items.) (Fact-fix round, 28 Nov:
+lead 12 was rewritten — it had merged the Niger Sanam attack with a
+separate Nigeria reprisal and invented a combined toll; the lead is
+now the Sanam attack alone, and the Nigeria reprisal, attacked Tue
+24 Nov and reported 25–26 Nov, is out.)
 Nothing in the image is invented; anything that could not be verified
 for 27 Nov was dropped.
 
